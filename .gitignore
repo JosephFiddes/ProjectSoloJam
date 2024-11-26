@@ -1,0 +1,5 @@
+# REAPER Backup file
+*.rpp-bak
+
+# Binaries
+*.exe
