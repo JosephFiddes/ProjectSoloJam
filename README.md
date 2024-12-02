@@ -10,9 +10,14 @@ The following dependencies are required:
  - windows.h
 
 ### Compilation
+
+#### Serial2OSC
 This project makes use of the winsock2.h library. With MinGW it is compiled as follows:
 
 `g++ -o serial2osc.exe serial2osc.cpp connection.cpp -lws2_32`
+
+#### Controller
+The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE.
 
 ### Required REAPER Settings
 REAPER needs to have OSC control enabled. 
