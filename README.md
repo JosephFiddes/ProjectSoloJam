@@ -14,10 +14,12 @@ The following dependencies are required:
 #### Serial2OSC
 This project makes use of the winsock2.h library. With MinGW it is compiled as follows:
 
-`g++ -o serial2osc.exe serial2osc.cpp connection.cpp -lws2_32`
+`g++ -o serial2osc.exe serial2osc.cpp OSCconnection.cpp SerialConnection.cpp -lws2_32`
 
 #### Controller
-The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE.
+The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE. The electrical circuit diagram of the controller is shown below:
+
+![Circuit diagram of controller.](./Controller/circuit.png)
 
 ### Required REAPER Settings
 REAPER needs to have OSC control enabled. 
@@ -28,7 +30,7 @@ REAPER needs to have OSC control enabled.
 
 ## Operation
 
-With REAPER open, run serial2osc.exe. Track 2 will be armed for recording, and track 3 will not. The other tracks will not be affected.
+With REAPER open, run serial2osc.exe. Pressing a button activates record arm for the corresponding track, and deactivates the record arm for the previous track.
 
 ## TODO
  - Set up device which captures physical input (so tracks can be armed using buttons rather than mouse).

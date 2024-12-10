@@ -78,7 +78,9 @@ size_t OSCConnection::send()
         sendto(sockfd, buffer.data(), n, 
             0, (const struct sockaddr *) &servaddr,  
                 sizeof(servaddr)); 
-        std::cout << "Message sent." << std::endl;
+
+//      std::cout.write(buffer.data(), n);
+//      std::cout << "Message sent." << std::endl;
         return n; 
     }
 
