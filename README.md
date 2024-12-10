@@ -33,7 +33,7 @@ REAPER needs to have OSC control enabled.
 With REAPER open, run serial2osc.exe. Pressing a button activates record arm for the corresponding track, and deactivates the record arm for the previous track.
 
 ## TODO
- - Set up device which captures physical input (so tracks can be armed using buttons rather than mouse).
- - Read serial input, and convert to OSC.
- - Have REAPER react to the OSC.
+ - Add button for Record vs Play.
+ - Add physical faders.
+ - Make physical structure for controller.
  - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits.
