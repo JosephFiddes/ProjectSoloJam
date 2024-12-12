@@ -7,7 +7,7 @@ class Toggle_buttons {
 public:
   Toggle_buttons(uint8_t[], uint8_t, uint8_t[], uint8_t,
   uint8_t[], uint8_t[], uint8_t, 
-  bool, const char*, const char*);
+  bool, const char*, const char*, bool bOSC_toggle = false);
   void update();
 
   uint8_t* check_button_pins;
@@ -35,6 +35,8 @@ private:
   uint8_t message_length;
   char* message_part1;
   char* message_part2;
+
+  bool bOSC_toggle;
 };
 
 #endif

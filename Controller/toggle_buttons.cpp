@@ -3,7 +3,8 @@
 Toggle_buttons::Toggle_buttons(uint8_t check_button_pins[], uint8_t total_check_buttons,
 uint8_t radio_button_pins[], uint8_t total_radio_buttons,
 uint8_t output_tracks[], uint8_t output_pins[], uint8_t total_outputs,
-bool bOutput_track_in_message, const char* message_part1, const char* message_part2) 
+bool bOutput_track_in_message, const char* message_part1, const char* message_part2,
+bool bOSC_toggle) 
 {
   // Allocate memory.
   this->bActive = (bool*) calloc(total_outputs, sizeof(bool));
@@ -61,6 +62,7 @@ bool bOutput_track_in_message, const char* message_part1, const char* message_pa
     this->message_length = c1 + 1; // Include null-terminator.
   }
 
+  this->bOSC_toggle = bOSC_toggle;
 }
 
 void Toggle_buttons::update() 
@@ -85,7 +87,6 @@ inline void Toggle_buttons::update_check_buttons()
 
     if (!bCur_pressed_check[i] && bPrev_pressed_check[i]) {
       bToggled[i] = true;
-      // True if newly in active state (note "=" instead of "==")
       bActive[i] = !bActive[i];
     }
 
@@ -158,13 +159,13 @@ inline void Toggle_buttons::send_to_outputs()
         Serial.print(output_tracks[i]);
         Serial.write(message_part2);
         Serial.write('\0');
-        bActive[i] ? Serial.write(1) : Serial.write(0);
+        (bActive[i] || bOSC_toggle) ? Serial.write(1) : Serial.write(0);
         Serial.write('\0');
       } else {
         Serial.write(message_length);
         Serial.write(message_part1);
         Serial.write('\0');
-        bActive[i] ? Serial.write(1) : Serial.write(0);
+        (bActive[i] || bOSC_toggle) ? Serial.write(1) : Serial.write(0);
         Serial.write('\0');
       }
     }
