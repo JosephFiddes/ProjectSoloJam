@@ -34,6 +34,9 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
 
 ## TODO
  - Add button for Record vs Play.
+ - Turn off recording when switching record arm to new track. (Note that finding a solution to overwriting track (see below) may negate the need for this.)
+ - Figure out bug where random nonsense sometimes gets sent through COM port on start-up.
+ - Find solution to overwriting part of track immediately overwriting the full thing.
  - Add physical faders.
  - Make physical structure for controller.
  - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits.
