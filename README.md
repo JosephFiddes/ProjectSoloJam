@@ -32,11 +32,19 @@ REAPER needs to have OSC control enabled.
 
 With REAPER open, run serial2osc.exe. Pressing a button activates record arm for the corresponding track, and deactivates the record arm for the previous track.
 
+## Bill of Materials
+
+| Product | Qty  |
+| ------- | ---: |
+| FSM103 12x12mm switch  | 10 |
+| AKTSC22K switch covers | 10 |
+
+
 ## TODO
  - Add button for Record vs Play.
- - Turn off recording when switching record arm to new track. (Note that finding a solution to overwriting track (see below) may negate the need for this.)
+ - Turn off recording when switching record arm to new track. (Note that finding a solution to overwriting track (see below) may negate the need for this. The reason this is a problem in the first place is because when you switch track while recording, you don't hear your recording on the original track until the recording is turned off.)
  - Figure out bug where random nonsense sometimes gets sent through COM port on start-up.
  - Find solution to overwriting part of track immediately overwriting the full thing.
  - Add physical faders.
  - Make physical structure for controller.
- - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits.
+ - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits. (Note that the solution is to have it be the first thing in the class definition, but a better solution might be worthwhile since the current one doesn't feel super robust.)

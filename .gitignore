@@ -3,3 +3,6 @@
 
 # Binaries
 *.exe
+
+# Ignore the ignore folder (for helper files that I don't want to upload).
+ignore
