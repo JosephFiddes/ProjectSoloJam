@@ -1,48 +1,45 @@
-#ifndef JDF_OSCCONT_TOGGLE_BUTTONS
-#define JDF_OSCCONT_TOGGLE_BUTTONS
+#ifndef JDF_OSCCONT_SLIDERS
+#define JDF_OSCCONT_SLIDERS
 
 #include <Arduino.h>
 
 typedef union {
-  int32_t ivalue;
+  float fvalue;
   byte bits[4];
-} Binary_int32;
+} Binary_float;
 
-class Toggle_buttons {
+class Sliders {
 public:
-  Toggle_buttons(uint8_t total_check_buttons, uint8_t total_radio_buttons,
+  Sliders(uint8_t total_sliders,
     const char* message_part1, 
     bool bOutput_track_in_message = false, 
     uint8_t track_numbers[] = {}, 
     uint8_t total_tracks = 1, 
-    const char* message_part2 = "",
-    bool bOSC_toggle = true);
-  void update(bool check_buttons[], bool radio_buttons[]);
+    const char* message_part2 = "");
+  void update(int sliders[]);
 
-  bool* bActive;
+  int* values;
   bool* bToggled;
   uint8_t* track_numbers;
 
-  uint8_t total_check_buttons;
-  uint8_t total_radio_buttons;
+  uint8_t total_sliders;
   uint8_t total_tracks;
 
 private:
-  inline void update_check_buttons(bool check_buttons[]);
-  inline void update_radio_buttons(bool radio_buttons[]);
+  inline void update_sliders(int new_values[]);
   inline void send_to_outputs();
 
+  /*
   bool* bCur_pressed_check;
   bool* bPrev_pressed_check;
   bool* bCur_pressed_radio;
   bool* bPrev_pressed_radio;
+  */
 
   bool bOutput_track_in_message;
   uint8_t message_length;
   char* message_part1;
   char* message_part2;
-
-  bool bOSC_toggle;
 };
 
 #endif

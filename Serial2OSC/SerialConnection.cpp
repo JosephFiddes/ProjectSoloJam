@@ -100,10 +100,12 @@ bool SerialConnection::parse() {
 //	}
 
 	parse_string();
-	value = parse_uint8();
+	value = parse_uint32();
+	value_type = parse_char();
 	parse_uint8();
 	return true;
 }
+
 
 inline void SerialConnection::parse_string() {
 	message = read_buffer + buffer_offset + 1;
@@ -111,6 +113,16 @@ inline void SerialConnection::parse_string() {
 }
 
 inline uint8_t SerialConnection::parse_uint8(){
+	return read_buffer[buffer_offset++];
+}
+
+inline uint32_t SerialConnection::parse_uint32(){
+	uint32_t* value = reinterpret_cast<uint32_t*>(read_buffer + buffer_offset);
+	buffer_offset += 4;
+	return *value;
+}
+
+inline char SerialConnection::parse_char(){
 	return read_buffer[buffer_offset++];
 }
 

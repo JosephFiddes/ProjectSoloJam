@@ -7,7 +7,7 @@
 OSCConnection::OSCConnection() {
     // Initialize Winsock (Windows Sockets).
     WSAData wsaData;
-    if (NO_ERROR != WSAStartup(MAKEWORD(2, 2), &wsaData))
+    if (0 != WSAStartup(MAKEWORD(2, 2), &wsaData))
     {
         std::cout << "Time Client: Error at WSAStartup()" << std::endl;
         return;
@@ -48,12 +48,25 @@ size_t OSCConnection::init_buffer()
     return buffer_size;
 }
 
-size_t OSCConnection::add_to_buffer(const char* message, int32_t value) {
+size_t OSCConnection::add_to_buffer(const char* message, int32_t value, char value_type) {
     if (!bReady_to_send) {
-        OSC_packet
-            .openMessage(message, 1)
-            .int32(value)
-            .closeMessage();
+        switch (value_type) {
+            case 'f':
+                {
+                float* value_f = reinterpret_cast<float*>(&value);
+                OSC_packet
+                    .openMessage(message, 1)
+                    .float32(*value_f)
+                    .closeMessage();
+                }
+                break;
+            case 'i':
+            default: 
+                OSC_packet
+                    .openMessage(message, 1)
+                    .int32(value)
+                    .closeMessage();
+        }
     } else {
         std::cerr << "Do not add to buffer if staged to send." << std::endl;
     }

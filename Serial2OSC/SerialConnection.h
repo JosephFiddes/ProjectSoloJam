@@ -16,6 +16,7 @@ public:
 
 	char* message;
 	int32_t value;
+	char value_type;
 
 	// Receive message from serial connection, and place in read_buffer.
 	DWORD recv();
@@ -43,6 +44,8 @@ private:
 
 	inline void parse_string();
 	inline uint8_t parse_uint8();
+	inline uint32_t parse_uint32();
+	inline char parse_char();
 };
 
 #endif

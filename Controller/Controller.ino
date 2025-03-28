@@ -1,42 +1,142 @@
+#include <Arduino.h>
 #include "toggle_buttons.h"
+#include "sliders.h"
+
+inline void update_values(bool digital_in[], const uint8_t total_digital_in,
+  const uint8_t digital_in_pins[], const uint8_t total_digital_in_pins,
+  int analog_in[], const uint8_t total_analog_in,
+  const uint8_t analog_in_pins[], const uint8_t total_analog_in_pins,
+  const uint8_t mux_toggle_pin); 
+
+// Pin designations:
+#define SENSOR_MUX_TOGGLE_PIN 2
+#define DISPLAY_MUX_TOGGLE_PIN 3
+
+#define TOTAL_DIGITAL_IN_PINS 4
+const uint8_t digital_in_pins[TOTAL_DIGITAL_IN_PINS] = {9, 8, A4, A5};
+
+#define TOTAL_ANALOG_IN_PINS 4
+const uint8_t analog_in_pins[TOTAL_ANALOG_IN_PINS] = {A0, A1, A2, A3};
+
+#define TOTAL_DIGITAL_IN_VALUES (TOTAL_DIGITAL_IN_PINS * 2)
+#define TOTAL_ANALOG_IN_VALUES (TOTAL_ANALOG_IN_PINS * 2)
+
+#define TOTAL_TRACKS 7
+const uint8_t track_numbers[TOTAL_TRACKS] = {1, 2, 3, 4, 5, 6, 7};
 
 #define TOTAL_RECARM_CHECK_BUTTONS 0
-#define TOTAL_RECARM_RADIO_BUTTONS 3
-#define TOTAL_RECARM_TRACK_OUTPUTS 3
+#define TOTAL_RECARM_RADIO_BUTTONS 7
 
-const uint8_t recarm_check_button_pins[TOTAL_RECARM_CHECK_BUTTONS] = {};
-const uint8_t recarm_radio_button_pins[TOTAL_RECARM_RADIO_BUTTONS] = {5,4,3}; // 2
-const uint8_t recarm_display_pins[TOTAL_RECARM_TRACK_OUTPUTS] = {11,10,9}; // 8
-const uint8_t track_numbers[TOTAL_RECARM_TRACK_OUTPUTS] = {1,2,3}; // 4
-
-Toggle_buttons track_arm_buttons = Toggle_buttons(recarm_check_button_pins, TOTAL_RECARM_CHECK_BUTTONS,
-  recarm_radio_button_pins, TOTAL_RECARM_RADIO_BUTTONS, 
-  track_numbers, recarm_display_pins, TOTAL_RECARM_TRACK_OUTPUTS, 
-  true, "b/track/", "/recarm");
+// Buttons for arming each track (note: all radio buttons)
+Toggle_buttons track_recarm_buttons = Toggle_buttons(
+  TOTAL_RECARM_CHECK_BUTTONS, TOTAL_RECARM_RADIO_BUTTONS, 
+  "b/track/",
+  true, track_numbers, TOTAL_TRACKS, 
+  "/recarm", false
+);
 
 #define TOTAL_RECORD_CHECK_BUTTONS 1
 #define TOTAL_RECORD_RADIO_BUTTONS 0
-#define TOTAL_RECORD_OUTPUTS 1
 
+// Button for toggling recording (note: check button)
+Toggle_buttons record_buttons = Toggle_buttons(
+  TOTAL_RECORD_CHECK_BUTTONS, TOTAL_RECORD_RADIO_BUTTONS, 
+  "t/record"
+);
 
-const uint8_t record_check_button_pins[TOTAL_RECORD_CHECK_BUTTONS] = {2};
-const uint8_t record_radio_button_pins[TOTAL_RECORD_RADIO_BUTTONS] = {};
-const uint8_t record_display_pins[TOTAL_RECORD_OUTPUTS] = {8};
+#define TOTAL_TRACK_VOL_SLIDERS 7
 
-Toggle_buttons record_button = Toggle_buttons(record_check_button_pins, TOTAL_RECORD_CHECK_BUTTONS,
-  record_radio_button_pins, TOTAL_RECORD_RADIO_BUTTONS, 
-  nullptr, record_display_pins, TOTAL_RECORD_OUTPUTS, 
-  false, "t/record", "", true);
+Sliders track_vol_sliders = Sliders(
+  TOTAL_TRACK_VOL_SLIDERS,
+  "n/track/",
+  true, track_numbers, TOTAL_TRACKS,
+  "/volume"
+);
+
+#define TOTAL_MASTER_VOL_SLIDERS 1
+
+Sliders master_vol_sliders = Sliders(
+  TOTAL_MASTER_VOL_SLIDERS,
+  "n/master/volume"
+);
+
+bool* digital_in_values;
+int* analog_in_values; 
 
 void setup() {
-  //uint8_t pins[TOTAL_BUTTONS] = {2,4,5,6};
-  //Toggle_buttons track_arm_buttons = Toggle_buttons(pins);
   Serial.begin(9600);
+
+  for (uint8_t i = 0; i<TOTAL_ANALOG_IN_PINS; i++) pinMode(analog_in_pins[i], INPUT);
+  for (uint8_t i = 0; i<TOTAL_DIGITAL_IN_PINS; i++) pinMode(digital_in_pins[i], INPUT);
+
+  pinMode(SENSOR_MUX_TOGGLE_PIN, OUTPUT);
+  pinMode(DISPLAY_MUX_TOGGLE_PIN, OUTPUT);
+
+  digital_in_values = (bool*) malloc(sizeof(bool)*TOTAL_DIGITAL_IN_VALUES);
+  analog_in_values = (int*) malloc(sizeof(int)*TOTAL_ANALOG_IN_VALUES);
 }
 
 void loop() {
-  track_arm_buttons.update();
-  record_button.update();
+  update_values(digital_in_values, TOTAL_DIGITAL_IN_VALUES,
+    digital_in_pins, TOTAL_DIGITAL_IN_PINS,
+    analog_in_values, TOTAL_ANALOG_IN_VALUES,
+    analog_in_pins, TOTAL_ANALOG_IN_PINS,
+    SENSOR_MUX_TOGGLE_PIN);
+
+/*
+  for (uint8_t i = 0; i<TOTAL_DIGITAL_IN_VALUES; i++) {
+    Serial.print(digital_in_values[i]);
+    Serial.print(", ");
+  }
+  Serial.println();
+  
+
+  for (uint8_t i = 0; i<TOTAL_ANALOG_IN_VALUES; i++) {
+    Serial.print(analog_in_values[i]);
+    Serial.print(", ");
+  }
+  Serial.println();
 
   Serial.flush();
+*/
+
+  track_recarm_buttons.update(nullptr, digital_in_values + 1);
+  record_buttons.update(digital_in_values, nullptr);
+
+  track_vol_sliders.update(analog_in_values + 1);
+  master_vol_sliders.update(analog_in_values);
+}
+
+#define MICROSECOND_DELAY 1
+
+inline void update_values(bool digital_in[], const uint8_t total_digital_in,
+  const uint8_t digital_in_pins[], const uint8_t total_digital_in_pins,
+  int analog_in[], const uint8_t total_analog_in,
+  const uint8_t analog_in_pins[], const uint8_t total_analog_in_pins,
+  const uint8_t mux_toggle_pin) 
+{
+  // First pass MUX 1
+  digitalWrite(mux_toggle_pin, 1);
+  delayMicroseconds(MICROSECOND_DELAY);
+
+  uint8_t i;
+  for (i=0; i < total_digital_in_pins; i++) {
+    digital_in[2*i] = digitalRead(digital_in_pins[i]);
+  }
+
+  for (i=0; i < total_analog_in_pins; i++) {
+    analog_in[2*i] = analogRead(analog_in_pins[i]);
+  }
+
+  // Second pass MUX 0
+  digitalWrite(mux_toggle_pin, 0);
+  delayMicroseconds(MICROSECOND_DELAY);
+
+  for (i=0; i < total_digital_in_pins; i++) {
+    digital_in[2*i + 1] = digitalRead(digital_in_pins[i]);
+  }
+
+  for (i=0; i < total_analog_in_pins; i++) {
+    analog_in[2*i + 1] = analogRead(analog_in_pins[i]);
+  }
 }

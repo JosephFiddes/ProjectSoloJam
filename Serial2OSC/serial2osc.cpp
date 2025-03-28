@@ -28,7 +28,6 @@ std::unique_ptr<OSCConnection> t(newOSCConnection());
 
 int main(int, char**)
 {
-
     try {
         while(true) {
             update();
@@ -36,6 +35,7 @@ int main(int, char**)
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
+
     return 0;
 }
 
@@ -49,7 +49,7 @@ inline void update() {
     // Collect messages until nothing is received.
     s->recv();
     while (s->parse()) {
-        t->add_to_buffer(s->message, s->value);   
+        t->add_to_buffer(s->message, s->value, s->value_type);   
     }
 
     t->finalize_buffer();
