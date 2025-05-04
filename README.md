@@ -1,5 +1,11 @@
-# ProjectSoloJam
+# ProjectSoloJam (Work In Progress)
  Files and info for my solo jam project.
+
+![Controller Prototype.](./Controller/PrototypePhoto_2025-05-04.jpg)
+
+Physical controller to send commands to REAPER, via Open Sound Control. The controller can toggle recording, change track volumes, and set record arming for tracks.
+
+A template REAPER project set up for the controller is found under SoloJamTemplate/SoloJamTemplate.rpp.
 
 ## Setup
 ### Dependencies
@@ -19,7 +25,9 @@ This project makes use of the winsock2.h library. With MinGW it is compiled as f
 #### Controller
 The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE. The electrical circuit diagram of the controller is shown below:
 
-![Circuit diagram of controller.](./Controller/circuit.png)
+<!--- ![Circuit diagram of controller.](./Controller/circuit.png) -->
+
+[NOTE: Not available currently - will be added soon.]
 
 ### Required REAPER Settings
 REAPER needs to have OSC control enabled. 

@@ -1,3 +1,7 @@
+# Don't include audio
+*.wav
+*.reapeaks
+
 # REAPER Backup file
 *.rpp-bak
 
