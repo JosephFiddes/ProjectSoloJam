@@ -62,7 +62,7 @@ inline void Sliders::update_sliders(int new_values[])
 {
   int diff;
 
-  // Check buttons (each button toggles).
+  // Check if slider has sufficiently changed.
   for (uint8_t i = 0; i < total_sliders; i++) {
     bToggled[i] = false;
 

@@ -21,8 +21,9 @@ const uint8_t analog_in_pins[TOTAL_ANALOG_IN_PINS] = {A0, A1, A2, A3};
 #define TOTAL_DIGITAL_IN_VALUES (TOTAL_DIGITAL_IN_PINS * 2)
 #define TOTAL_ANALOG_IN_VALUES (TOTAL_ANALOG_IN_PINS * 2)
 
-#define TOTAL_TRACKS 7
-const uint8_t track_numbers[TOTAL_TRACKS] = {1, 2, 3, 4, 5, 6, 7};
+#define TOTAL_TRACKS_FOR_RECARM 7
+const uint8_t track_numbers_for_recarm[TOTAL_TRACKS_FOR_RECARM] 
+  = {2, 3, 4, 5, 6, 7, 8};
 
 #define TOTAL_RECARM_CHECK_BUTTONS 0
 #define TOTAL_RECARM_RADIO_BUTTONS 7
@@ -31,7 +32,7 @@ const uint8_t track_numbers[TOTAL_TRACKS] = {1, 2, 3, 4, 5, 6, 7};
 Toggle_buttons track_recarm_buttons = Toggle_buttons(
   TOTAL_RECARM_CHECK_BUTTONS, TOTAL_RECARM_RADIO_BUTTONS, 
   "b/track/",
-  true, track_numbers, TOTAL_TRACKS, 
+  true, track_numbers_for_recarm, TOTAL_TRACKS_FOR_RECARM, 
   "/recarm", false
 );
 
@@ -44,21 +45,28 @@ Toggle_buttons record_buttons = Toggle_buttons(
   "t/record"
 );
 
-#define TOTAL_TRACK_VOL_SLIDERS 7
+#define TOTAL_TRACK_VOL_SLIDERS 8
+#define TOTAL_TRACKS_FOR_VOL_SLIDERS 8
+const uint8_t track_numbers_for_vol_sliders[TOTAL_TRACKS_FOR_VOL_SLIDERS] 
+  = {1, 2, 3, 4, 5, 6, 7, 8};
 
 Sliders track_vol_sliders = Sliders(
   TOTAL_TRACK_VOL_SLIDERS,
   "n/track/",
-  true, track_numbers, TOTAL_TRACKS,
+  true, track_numbers_for_vol_sliders, TOTAL_TRACKS_FOR_VOL_SLIDERS,
   "/volume"
 );
 
-#define TOTAL_MASTER_VOL_SLIDERS 1
-
-Sliders master_vol_sliders = Sliders(
-  TOTAL_MASTER_VOL_SLIDERS,
-  "n/master/volume"
-);
+// Effects are applied PreFader, including ReaStream. Therefore we can't
+// adjust the master fader directly.
+// Instead, all tracks are sent to a "master track", which then sends its output
+// post-fader to the real master track.
+// #define TOTAL_MASTER_VOL_SLIDERS 1
+// 
+// Sliders master_vol_sliders = Sliders(
+//   TOTAL_MASTER_VOL_SLIDERS,
+//   "n/master/volume"
+// );
 
 bool* digital_in_values;
 int* analog_in_values; 
@@ -103,8 +111,8 @@ void loop() {
   track_recarm_buttons.update(nullptr, digital_in_values + 1);
   record_buttons.update(digital_in_values, nullptr);
 
-  track_vol_sliders.update(analog_in_values + 1);
-  master_vol_sliders.update(analog_in_values);
+  track_vol_sliders.update(analog_in_values);
+  // master_vol_sliders.update(analog_in_values);
 }
 
 #define MICROSECOND_DELAY 1
