@@ -55,7 +55,8 @@ bool bOSC_toggle)
   this->bOSC_toggle = bOSC_toggle;
 }
 
-void Toggle_buttons::update(bool check_buttons[], bool radio_buttons[])
+// Returns true if a message was sent.
+bool Toggle_buttons::update(bool check_buttons[], bool radio_buttons[])
 {
   for (uint8_t i = 0; i < total_tracks; i++) {
     bToggled[i] = false;
@@ -63,7 +64,7 @@ void Toggle_buttons::update(bool check_buttons[], bool radio_buttons[])
 
   update_check_buttons(check_buttons);
   update_radio_buttons(radio_buttons);
-  send_to_outputs();  
+  return send_to_outputs();  
 }
 
 inline void Toggle_buttons::update_check_buttons(bool check_buttons[])
@@ -145,42 +146,53 @@ inline bool Toggle_buttons::button_toggled(const bool cur_pressed, const bool pr
     (!bToggle_on_button_up && cur_pressed && !prev_pressed);
 }
 
-inline void Toggle_buttons::send_to_outputs() 
+inline bool Toggle_buttons::send_to_outputs() 
 {
   Binary_int32 value_to_write;
+  bool bMessage_sent = false;
 
   for (uint8_t i=0; i < total_tracks; i++) {
     if (bToggled[i]) {
-      // OSC expects 32-bit big-endian two’s complement integer 
-      value_to_write.ivalue = (bActive[i] || bOSC_toggle) ? 1 : 0;
-      
-      // Write data.
-      if (bOutput_track_in_message) {
-        // Add track number to message length.
-        uint8_t true_message_length = (track_numbers[i] >= 10) ? 
-          message_length + 2 : message_length + 1;
+      // OSC expects 32-bit big-endian two’s complement integer
+      int32_t value = (bActive[i] || bOSC_toggle) ? 1 : 0;
+      send_message(value, i);
 
-        Serial.write(true_message_length);
-        Serial.write(message_part1);
-        Serial.print(track_numbers[i]);
-        Serial.write(message_part2);
-        Serial.write('\0');
-      } else {
-        Serial.write(message_length);
-        Serial.write(message_part1);
-        Serial.write('\0');
-      }
-      
-      Serial.write(value_to_write.bits, 4);
-      Serial.write('i');
-      Serial.write('\0');
-
-    #ifdef DEBUG  
-      Serial.println();
-    #else
-      Serial.flush();
-    #endif
+      bMessage_sent = true;
     }
   }
+
+  return bMessage_sent;
 }
 
+inline void Toggle_buttons::send_message(const int32_t value, const uint8_t track_number) {
+  Binary_int32 value_to_write;
+
+  value_to_write.ivalue = value;
+
+  // Write data.
+  if (bOutput_track_in_message) {
+    // Add track number to message length.
+    uint8_t true_message_length = (track_numbers[track_number] >= 10) ? 
+      message_length + 2 : message_length + 1;
+
+    Serial.write(true_message_length);
+    Serial.write(message_part1);
+    Serial.print(track_numbers[track_number]);
+    Serial.write(message_part2);
+    Serial.write('\0');
+  } else {
+    Serial.write(message_length);
+    Serial.write(message_part1);
+    Serial.write('\0');
+  }
+  
+  Serial.write(value_to_write.bits, 4);
+  Serial.write('i');
+  Serial.write('\0');
+
+  #ifdef DEBUG  
+    Serial.println();
+  #else
+    Serial.flush();
+  #endif
+} 

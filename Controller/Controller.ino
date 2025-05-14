@@ -71,6 +71,10 @@ Sliders track_vol_sliders = Sliders(
 bool* digital_in_values;
 int* analog_in_values; 
 
+// Keep track of whether or not we are recording outside of record_buttons, 
+// since we need to be able to reference it at the top level.
+bool bRecording = false;
+
 void setup() {
   Serial.begin(9600);
 
@@ -108,8 +112,15 @@ void loop() {
   Serial.flush();
 */
 
-  track_recarm_buttons.update(nullptr, digital_in_values + 1);
-  record_buttons.update(digital_in_values, nullptr);
+  bool bChanged_recarm = track_recarm_buttons.update(nullptr, digital_in_values + 1);
+
+  if (bChanged_recarm && bRecording) {
+    record_buttons.send_message(1);
+    bRecording = false;
+  }
+
+  bool bChanged_record = record_buttons.update(digital_in_values, nullptr);
+  if (bChanged_record) bRecording = !bRecording;
 
   track_vol_sliders.update(analog_in_values);
   // master_vol_sliders.update(analog_in_values);

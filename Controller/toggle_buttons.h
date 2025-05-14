@@ -18,7 +18,11 @@ public:
     uint8_t total_tracks = 1, 
     const char* message_part2 = "",
     bool bOSC_toggle = true);
-  void update(bool check_buttons[], bool radio_buttons[]);
+  bool update(bool check_buttons[], bool radio_buttons[]);
+
+  // This function is public to allow messages to be sent from other sources.
+  // Useful for when we turn recording off after changing armed track.
+  inline void send_message(const int32_t value, const uint8_t track_number = 0);
 
   bool* bActive;
   bool* bToggled;
@@ -32,7 +36,7 @@ private:
   inline void update_check_buttons(bool check_buttons[]);
   inline void update_radio_buttons(bool radio_buttons[]);
   inline bool button_toggled(const bool cur_pressed, const bool prev_pressed);
-  inline void send_to_outputs();
+  inline bool send_to_outputs();
 
   bool* bCur_pressed_check;
   bool* bPrev_pressed_check;

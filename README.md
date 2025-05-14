@@ -59,7 +59,6 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
 
 
 ## TODO
- - Turn off recording when switching record arm to new track. (Note that finding a solution to overwriting track (see below) may negate the need for this. The reason this is a problem in the first place is because when you switch track while recording, you don't hear your recording on the original track until the recording is turned off.)
  - Figure out bug where random nonsense sometimes gets sent through COM port on start-up.
  - Find solution to overwriting part of track immediately overwriting the full thing.
  - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits. (Note that the solution is to have it be the first thing in the class definition, but a better solution might be worthwhile since the current one doesn't feel super robust.)
