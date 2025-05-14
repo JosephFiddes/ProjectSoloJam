@@ -4,6 +4,7 @@
 
 Toggle_buttons::Toggle_buttons(uint8_t total_check_buttons, uint8_t total_radio_buttons,
 const char* message_part1, 
+bool bToggle_on_button_up,
 bool bOutput_track_in_message, uint8_t track_numbers[], uint8_t total_tracks, 
 const char* message_part2,
 bool bOSC_toggle) 
@@ -29,6 +30,7 @@ bool bOSC_toggle)
     (this->track_numbers)[i] = track_numbers[i];
   }
 
+  this->bToggle_on_button_up = bToggle_on_button_up;
   this->bOutput_track_in_message = bOutput_track_in_message;
 
   // Get length of OSC message for quicker parsing.
@@ -73,7 +75,7 @@ inline void Toggle_buttons::update_check_buttons(bool check_buttons[])
     // Button pulls input low.
     bCur_pressed_check[i] = !check_buttons[i];
 
-    if (!bCur_pressed_check[i] && bPrev_pressed_check[i]) {
+    if (button_toggled(bCur_pressed_check[i], bPrev_pressed_check[i])) {
       bToggled[i] = true;
       bActive[i] = !bActive[i];
     }
@@ -96,7 +98,7 @@ inline void Toggle_buttons::update_radio_buttons(bool radio_buttons[])
     bCur_pressed_radio[i] = !radio_buttons[i];
 
     // Button up event.
-    if (!bCur_pressed_radio[i] && bPrev_pressed_radio[i]) {
+    if (button_toggled(bCur_pressed_radio[i], bPrev_pressed_radio[i])) {
       bRadio_toggled = true;
       new_active_button = i;
     }
@@ -129,6 +131,18 @@ inline void Toggle_buttons::update_radio_buttons(bool radio_buttons[])
       }
     }
   }
+}
+
+inline bool Toggle_buttons::button_toggled(const bool cur_pressed, const bool prev_pressed) 
+{
+  return 
+    // If toggle on button up: activate when the button is no longer being pressed.
+    // (button up event)
+    (bToggle_on_button_up && !cur_pressed && prev_pressed)
+    ||
+    // Otherwise: activate when button starts to be pressed.
+    // (button down event)
+    (!bToggle_on_button_up && cur_pressed && !prev_pressed);
 }
 
 inline void Toggle_buttons::send_to_outputs() 

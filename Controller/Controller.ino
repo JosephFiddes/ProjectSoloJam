@@ -31,7 +31,7 @@ const uint8_t track_numbers_for_recarm[TOTAL_TRACKS_FOR_RECARM]
 // Buttons for arming each track (note: all radio buttons)
 Toggle_buttons track_recarm_buttons = Toggle_buttons(
   TOTAL_RECARM_CHECK_BUTTONS, TOTAL_RECARM_RADIO_BUTTONS, 
-  "b/track/",
+  "b/track/", false,
   true, track_numbers_for_recarm, TOTAL_TRACKS_FOR_RECARM, 
   "/recarm", false
 );
