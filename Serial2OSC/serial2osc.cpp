@@ -3,6 +3,8 @@
 #include "OSCconnection.h"
 #include "SerialConnection.h"
 
+#define SERIAL_PORT "COM7"
+
 #define I_TRUE 1
 #define I_FALSE 0
 
@@ -13,17 +15,17 @@ OSCConnection* newOSCConnection()
     return new OSCConnection;
 }
 
-SerialConnection* newSerialConnection();
+SerialConnection* newSerialConnection(const char* port);
 
-SerialConnection* newSerialConnection()
+SerialConnection* newSerialConnection(const char* port)
 {
-    return new SerialConnection;
+    return new SerialConnection(port);
 }
 
 inline void update();
 
 
-std::unique_ptr<SerialConnection> s(newSerialConnection());
+std::unique_ptr<SerialConnection> s(newSerialConnection(SERIAL_PORT));
 std::unique_ptr<OSCConnection> t(newOSCConnection());
 
 int main(int, char**)

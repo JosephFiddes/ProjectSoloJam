@@ -12,7 +12,7 @@
 class SerialConnection 
 {
 public:
-	SerialConnection();
+	SerialConnection(const char* port);
 
 	char* message;
 	int32_t value;

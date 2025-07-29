@@ -12,7 +12,7 @@
 #include <oscpp/print.hpp>
 
 // Port number.
-#define PORT 2345
+#define OSC_PORT 2345
 
 class OSCConnection
 {

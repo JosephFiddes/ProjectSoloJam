@@ -18,6 +18,9 @@ The following dependencies are required:
 ### Compilation
 
 #### Serial2OSC
+
+Prior to compilation, make sure that the port being used by the Arduino matches to port used by Serial2OSC. This can be done by opening serial2osc.cpp, finding the line `#define SERIAL_PORT "COM7"` and changing the `"COM7"` to whatever port the Arduino is using.
+
 This project makes use of the winsock2.h library. With MinGW it is compiled as follows:
 
 `g++ -o serial2osc.exe serial2osc.cpp OSCconnection.cpp SerialConnection.cpp -lws2_32`

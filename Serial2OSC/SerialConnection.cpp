@@ -14,9 +14,9 @@ int SerialConnection::openSerialPort(const char* portname)
 }
 */
 
-SerialConnection::SerialConnection()
+SerialConnection::SerialConnection(const char* port)
 {
-	hSerial = CreateFile("COM4", GENERIC_READ, 0, 0, 
+	hSerial = CreateFile(port, GENERIC_READ, 0, 0, 
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hSerial == INVALID_HANDLE_VALUE) {
