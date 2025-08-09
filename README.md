@@ -47,15 +47,17 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
 
 | Product | Qty  |
 | ------- | ---: |
-| FSM103 12x12mm switch  | 8 |
-| AKTSC22K switch covers | 8 |
+| **Electronic Components:** |   |
+| FSM103 12x12mm switch  | 16 |
+| AKTSC22K switch covers | 16 |
 | Arduino Uno            | 1 |
 | PTA4553-2010CIB103 Slide Potentiometer | 8 |
-| CD4053B Multiplexers | 4 |
-| 1 uF Capacitors | 8 |
-| 100 Ohm Resistors | 8 |
-| 10K Ohm Resistors | 8 |
-| Breadboard, prototype board, cables | |
+| CD4053B Multiplexers | 8 |
+| 1 uF Capacitors | 16 |
+| 100 Ohm Resistors | 16 |
+| 10K Ohm Resistors | 24 |
+| Breadboard, prototype board, cables <br> OR Solo Jam Controller PCB | |
+| **3D Printed Files:** |   |
 | Base Plate Part 1 | 1 |
 | Base Plate Part 2 | 1 |
 | SliderKnob | 8 |
@@ -66,7 +68,5 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
  - Find solution to overwriting part of track immediately overwriting the full thing.
  - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits. (Note that the solution is to have it be the first thing in the class definition, but a better solution might be worthwhile since the current one doesn't feel super robust.)
  - Fix model for base by adding tolerance in gap and increasing width of side holes for cables.
- - Design and manufacture PCBs for better reliability.
  - Design and manufacture top-piece for controller for stability and isolation of electronics.
  - Make controller more robust - or formalise standard for communicating with Arduino.
- - Add circuit schematic to this repo.
