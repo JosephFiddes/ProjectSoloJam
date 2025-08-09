@@ -5,7 +5,9 @@
 # REAPER Backup file
 *.rpp-bak
 
-# KICAD
+### KICAD
+Gerbers
+
 # Temporary files
 *.000
 *.bak
@@ -35,7 +37,7 @@ fp-info-cache
 *.xml
 *.csv
 
-# Binaries
+### Binaries
 *.exe
 
 # Ignore the ignore folder (for helper files that I don't want to upload).

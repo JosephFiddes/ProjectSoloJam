@@ -28,9 +28,9 @@ This project makes use of the winsock2.h library. With MinGW it is compiled as f
 #### Controller
 The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE. The electrical circuit diagram of the controller is shown below:
 
-<!--- ![Circuit diagram of controller.](./Controller/circuit.png) -->
+![Circuit diagram of controller.](./Controller/circuit.png)
 
-[NOTE: Not available currently - will be added soon.]
+A higher quality version of the image above may be found by [clicking here](./Controller/Controller%20PCB%20Files/Controller%20Schematic.pdf).
 
 ### Required REAPER Settings
 REAPER needs to have OSC control enabled. 
