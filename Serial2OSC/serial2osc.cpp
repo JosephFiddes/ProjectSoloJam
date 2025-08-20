@@ -1,19 +1,12 @@
 #include <memory>
 
-#include "OSCconnection.h"
+#include "Controller.h"
 #include "SerialConnection.h"
 
 #define SERIAL_PORT "COM7"
 
 #define I_TRUE 1
 #define I_FALSE 0
-
-OSCConnection* newOSCConnection();
-
-OSCConnection* newOSCConnection()
-{
-    return new OSCConnection;
-}
 
 SerialConnection* newSerialConnection(const char* port);
 
@@ -26,7 +19,8 @@ inline void update();
 
 
 std::unique_ptr<SerialConnection> s(newSerialConnection(SERIAL_PORT));
-std::unique_ptr<OSCConnection> t(newOSCConnection());
+
+Controller controller;
 
 int main(int, char**)
 {
@@ -36,6 +30,7 @@ int main(int, char**)
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
+        s->close();
     }
 
     return 0;
@@ -46,16 +41,13 @@ inline void update() {
     DWORD message_size;
     bool bMessage_empty = true;
 
-    t->init_buffer();
-
     // Collect messages until nothing is received.
     s->recv();
-    while (s->parse()) {
-        t->add_to_buffer(s->message, s->value, s->value_type);   
+    while (s->parse()) {  
+        controller.add_command(s->command_type, s->command_source, s->command_value);
     }
 
-    t->finalize_buffer();
-    t->send();
+    controller.send_commands();
 
     /*
     // Initial test: Arm recording for track 3, and disarm recording for track 2.

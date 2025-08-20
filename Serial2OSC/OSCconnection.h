@@ -45,12 +45,16 @@ public:
 	size_t send();
 	size_t recv();
 
+	// Getter for if the buffer is initialised.
+	bool buffer_initialised() { return bInitialised; };
+
 private:
 	void handle_packet(const OSCPP::Server::Packet& packet);
 
 	// Packet information. bReady_to_send is used to make sure that only
 	// complete packets are sent.
 	bool bReady_to_send = false;
+	bool bInitialised = false;
 	OSCPP::Client::Packet OSC_packet;
 
     // Client stuff
