@@ -19,7 +19,8 @@ void Controller::add_command(char type, uint32_t source, uint32_t value) {
 			perform_button_action(source);
 			break;
 		case 'F': // Fader
-			std::cout << "Faders yet to be implemented" << std::endl;
+			// In this case, value is actually a float.
+			perform_fader_action(source, *reinterpret_cast<float*>(&value));
 			break;
 		default:
 			std::cerr << "Unexpected command type " << type << std::endl;
@@ -32,6 +33,7 @@ void Controller::send_commands() {
 }
 
 inline void Controller::perform_button_action(uint32_t source) {
+	// Take differing action based on the particular source of the button press.
 	// CASE 0: Toggle Recording.
 	if (source == 0) {
 		toggle_recording();
@@ -73,3 +75,18 @@ inline void Controller::set_record_arm(uint32_t track) {
 	if (bRecording) toggle_recording();
 }
 
+inline void Controller::perform_fader_action(uint32_t source, float value) {
+	// Track number is fader index + 1. Value == volume.
+	set_track_volume(source + 1, value);
+}
+
+inline void Controller::set_track_volume(uint32_t track, float volume) {
+	auto message = [](uint32_t track) {
+		return "n/track/" + std::to_string(track) + "/volume";
+	};
+
+	// add_to_buffer takes a uint32_t for its second argument.
+	// This will be converted back to a float inside the function.
+	t->add_to_buffer(message(track).c_str(), 
+		*reinterpret_cast<uint32_t*>(&volume), 'f');
+}

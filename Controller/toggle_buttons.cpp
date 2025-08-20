@@ -7,8 +7,6 @@
 Toggle_buttons::Toggle_buttons(uint8_t total_buttons, uint32_t first_index,
 bool bToggle_on_button_up) 
 {
-
-
   // Allocate memory.
   this->bCur_pressed = (bool*) calloc(total_buttons, sizeof(bool));
   this->bPrev_pressed = (bool*) calloc(total_buttons, sizeof(bool));
@@ -78,9 +76,6 @@ inline bool Toggle_buttons::send_to_outputs()
 }
 
 inline void Toggle_buttons::send_message(const uint32_t index) {
-  
-  //Serial.write((byte*) &index, 4);
-
   Serial.write('B');
   #ifdef DEBUG  
     Serial.print(index);

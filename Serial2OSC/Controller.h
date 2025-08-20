@@ -28,6 +28,10 @@ private:
 
 	inline void toggle_recording();
 	inline void set_record_arm(uint32_t track);
+
+	inline void perform_fader_action(uint32_t source, float value);
+
+	inline void set_track_volume(uint32_t track, float volume);
 };
 
 

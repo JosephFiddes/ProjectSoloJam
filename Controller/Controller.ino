@@ -35,19 +35,11 @@ Toggle_buttons record_buttons = Toggle_buttons(
   TOTAL_RECORD_BUTTONS, 0, false
 );
 
-/*
-#define TOTAL_TRACK_VOL_SLIDERS 8
-#define TOTAL_TRACKS_FOR_VOL_SLIDERS 8
-const uint8_t track_numbers_for_vol_sliders[TOTAL_TRACKS_FOR_VOL_SLIDERS] 
-  = {1, 2, 3, 4, 5, 6, 7, 8};
 
-Sliders track_vol_sliders = Sliders(
-  TOTAL_TRACK_VOL_SLIDERS,
-  "n/track/",
-  true, track_numbers_for_vol_sliders, TOTAL_TRACKS_FOR_VOL_SLIDERS,
-  "/volume"
-);
-*/
+#define TOTAL_TRACK_VOL_SLIDERS 8
+
+Sliders track_vol_sliders = Sliders(TOTAL_TRACK_VOL_SLIDERS, 0);
+
 // Effects are applied PreFader, including ReaStream. Therefore we can't
 // adjust the master fader directly.
 // Instead, all tracks are sent to a "master track", which then sends its output
@@ -104,7 +96,7 @@ void loop() {
 
   bool bChanged_record = record_buttons.update(digital_in_values);
 
-  // track_vol_sliders.update(analog_in_values);
+  track_vol_sliders.update(analog_in_values);
   // master_vol_sliders.update(analog_in_values);
 }
 
