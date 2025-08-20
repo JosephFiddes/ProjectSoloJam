@@ -13,10 +13,14 @@ class SerialConnection
 {
 public:
 	SerialConnection(const char* port);
+	~SerialConnection();
 
 	char* message;
 	int32_t value;
-	char value_type;
+
+	char command_type;
+	uint32_t command_source;
+	uint32_t command_value;
 
 	// Receive message from serial connection, and place in read_buffer.
 	DWORD recv();
@@ -24,6 +28,9 @@ public:
 	// Parses info in read_buffer, and puts into message and value.
 	// Returns true if there is data to parse. Returns false otherwise.
 	bool parse();
+
+	// CLoses the connection.
+	void close();
 
 private:
 	HANDLE hSerial;

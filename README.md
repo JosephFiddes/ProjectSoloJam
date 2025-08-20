@@ -23,7 +23,7 @@ Prior to compilation, make sure that the port being used by the Arduino matches 
 
 This project makes use of the winsock2.h library. With MinGW it is compiled as follows:
 
-`g++ -o serial2osc.exe serial2osc.cpp OSCconnection.cpp SerialConnection.cpp -lws2_32`
+`g++ -o serial2osc.exe serial2osc.cpp OSCconnection.cpp SerialConnection.cpp Controller.cpp -lws2_32`
 
 #### Controller
 The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE. The electrical circuit diagram of the controller is shown below:

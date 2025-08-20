@@ -77,6 +77,14 @@ SerialConnection::SerialConnection(const char* port)
 	//}
 }
 
+SerialConnection::~SerialConnection() {
+	close();
+}
+
+void SerialConnection::close() {
+	CloseHandle(hSerial);
+}
+
 DWORD SerialConnection::recv() {
 	buffer_offset = 0;
 
@@ -89,6 +97,7 @@ DWORD SerialConnection::recv() {
 
 bool SerialConnection::parse() {
 	if (dw_bytes_read == 0) return false;
+
 	if (buffer_offset == dw_bytes_read) return false;
 
 //	if (dw_bytes_read > 0) {
@@ -99,15 +108,26 @@ bool SerialConnection::parse() {
 //		std::cout << dw_bytes_read << ".";
 //	}
 
-	parse_string();
-	value = parse_uint32();
-	value_type = parse_char();
-	parse_uint8();
+	command_type = parse_char();
+	
+	switch (command_type) {
+		case 'B': // Button
+			command_source = parse_uint32();
+			break;
+		case 'F': // Fader
+			command_source = parse_uint32();
+			command_value = parse_uint32();
+			break;
+		default:
+			throw std::runtime_error("Unrecognised command_type " + command_type);
+	}
+
 	return true;
 }
 
 
 inline void SerialConnection::parse_string() {
+	// Strings begin with single byte that encodes string length.
 	message = read_buffer + buffer_offset + 1;
 	buffer_offset += 1 + read_buffer[buffer_offset];
 }

@@ -45,6 +45,8 @@ size_t OSCConnection::init_buffer()
         .openBundle(0);
 
     buffer_size = OSC_packet.size();
+
+    bInitialised = true;
     return buffer_size;
 }
 
@@ -76,8 +78,13 @@ size_t OSCConnection::add_to_buffer(const char* message, int32_t value, char val
 }
 
 size_t OSCConnection::finalize_buffer() {
+    if (!bInitialised) {
+        return -1;
+    }
+
     OSC_packet.closeBundle();
     bReady_to_send = true;
+    bInitialised = false;
 
     buffer_size = OSC_packet.size();
     return buffer_size;
