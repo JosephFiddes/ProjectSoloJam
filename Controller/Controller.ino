@@ -13,7 +13,7 @@ inline void update_values(bool digital_in[], const uint8_t total_digital_in,
 #define DISPLAY_MUX_TOGGLE_PIN 3
 
 #define TOTAL_DIGITAL_IN_PINS 4
-const uint8_t digital_in_pins[TOTAL_DIGITAL_IN_PINS] = {9, 8, A4, A5};
+const uint8_t digital_in_pins[TOTAL_DIGITAL_IN_PINS] = {A4, A5, 8, 9};
 
 #define TOTAL_ANALOG_IN_PINS 4
 const uint8_t analog_in_pins[TOTAL_ANALOG_IN_PINS] = {A0, A1, A2, A3};
@@ -92,9 +92,8 @@ void loop() {
 */
 
 
-  bool bChanged_recarm = track_recarm_buttons.update(digital_in_values + 1);
-
-  bool bChanged_record = record_buttons.update(digital_in_values);
+  track_recarm_buttons.update(digital_in_values + 1);
+  record_buttons.update(digital_in_values);
 
   track_vol_sliders.update(analog_in_values);
   // master_vol_sliders.update(analog_in_values);
@@ -112,10 +111,12 @@ inline void update_values(bool digital_in[], const uint8_t total_digital_in,
 
   uint8_t i;
   for (i=0; i < total_digital_in_pins; i++) {
-    digital_in[2*i] = digitalRead(digital_in_pins[i]);
+    // MUX 1 affects odd digital inputs.
+    digital_in[2*i + 1] = digitalRead(digital_in_pins[i]);
   }
 
   for (i=0; i < total_analog_in_pins; i++) {
+    // MUX 1 affects even analog inputs. 
     analog_in[2*i] = analogRead(analog_in_pins[i]);
   }
 
@@ -124,10 +125,16 @@ inline void update_values(bool digital_in[], const uint8_t total_digital_in,
   delayMicroseconds(1);
 
   for (i=0; i < total_digital_in_pins; i++) {
-    digital_in[2*i + 1] = digitalRead(digital_in_pins[i]);
+    // MUX 0 affects even digital inputs.
+    digital_in[2*i] = digitalRead(digital_in_pins[i]);
   }
 
   for (i=0; i < total_analog_in_pins; i++) {
+    // MUX 0 affects odd analog inputs. 
     analog_in[2*i + 1] = analogRead(analog_in_pins[i]);
   }
+  
+  // The mismatch of parity between digital and analog inputs is
+  // not intentional, but I'll be damned if I have to redesign 
+  // and solder another fucking PCB, so we're sticking with it.
 }
