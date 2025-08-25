@@ -78,9 +78,7 @@ size_t OSCConnection::add_to_buffer(const char* message, int32_t value, char val
 }
 
 size_t OSCConnection::finalize_buffer() {
-    if (!bInitialised) {
-        return -1;
-    }
+    if (!bInitialised) return -1;
 
     OSC_packet.closeBundle();
     bReady_to_send = true;
@@ -92,19 +90,20 @@ size_t OSCConnection::finalize_buffer() {
 
 size_t OSCConnection::send()
 {
-    if (bReady_to_send) {
-        size_t n = OSC_packet.size();
+    if (!bReady_to_send) return -1;
 
-        sendto(sockfd, buffer.data(), n, 
-            0, (const struct sockaddr *) &servaddr,  
-                sizeof(servaddr)); 
+    size_t n = OSC_packet.size();
 
-//      std::cout.write(buffer.data(), n);
-//      std::cout << "Message sent." << std::endl;
-        return n; 
-    }
+    sendto(sockfd, buffer.data(), n, 
+        0, (const struct sockaddr *) &servaddr,  
+            sizeof(servaddr)); 
 
-    return -1;
+    // Prevent the program from sending a duplicate command.
+    bReady_to_send = false;
+
+//  std::cout.write(buffer.data(), n);
+//  std::cout << "Message sent." << std::endl;
+    return n; 
 }
 
 // Code for receiving data (currently unused and untested).
