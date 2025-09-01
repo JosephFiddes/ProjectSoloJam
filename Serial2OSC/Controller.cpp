@@ -1,11 +1,15 @@
 #include "Controller.h"
 
+//#define DEBUG 
+
 Controller::Controller() {
 	t = std::unique_ptr<OSCConnection>(new OSCConnection());
 
 	bRecording = false;
 	bTrack_armed = false;
 	cur_armed_track = 0;
+	bPlaying = false;
+	bMetronome = true;
 }
 
 void Controller::add_command(char type, uint32_t source, uint32_t value) {
@@ -33,6 +37,10 @@ void Controller::send_commands() {
 }
 
 inline void Controller::perform_button_action(uint32_t source) {
+	#ifdef DEBUG
+		std::cout << "B" << source << std::endl;
+	#endif
+
 	// Take differing action based on the particular source of the button press.
 	// CASE 0: Toggle Recording.
 	if (source == 0) {
@@ -46,6 +54,16 @@ inline void Controller::perform_button_action(uint32_t source) {
 		set_record_arm(source + 1);
 		return;
 	}
+
+	// Miscellaneous Functions (start on 0x100).
+	switch (source) {
+		case 0x101:
+			toggle_play();
+			return;
+		case 0x102:
+			toggle_metronome();
+			return;
+	}	
 }
 
 inline void Controller::toggle_recording() {
@@ -75,7 +93,23 @@ inline void Controller::set_record_arm(uint32_t track) {
 	if (bRecording) toggle_recording();
 }
 
+inline void Controller::toggle_play() {
+	bPlaying = !bPlaying;
+
+	t->add_to_buffer("t/play", 1, 'i');
+}
+
+inline void Controller::toggle_metronome() {
+	bMetronome = !bMetronome;
+
+	t->add_to_buffer("t/click", 1, 'i');
+}
+
 inline void Controller::perform_fader_action(uint32_t source, float value) {
+	#ifdef DEBUG
+		std::cout << "F" << source << " " << value << std::endl;
+	#endif
+
 	// Track number is fader index + 1. Value == volume.
 	set_track_volume(source + 1, value);
 }

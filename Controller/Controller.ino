@@ -12,8 +12,8 @@ inline void update_values(bool digital_in[], const uint8_t total_digital_in,
 #define SENSOR_MUX_TOGGLE_PIN 2
 #define DISPLAY_MUX_TOGGLE_PIN 3
 
-#define TOTAL_DIGITAL_IN_PINS 4
-const uint8_t digital_in_pins[TOTAL_DIGITAL_IN_PINS] = {A4, A5, 8, 9};
+#define TOTAL_DIGITAL_IN_PINS 6
+const uint8_t digital_in_pins[TOTAL_DIGITAL_IN_PINS] = {A4, A5, 8, 9, 10, 11};
 
 #define TOTAL_ANALOG_IN_PINS 4
 const uint8_t analog_in_pins[TOTAL_ANALOG_IN_PINS] = {A0, A1, A2, A3};
@@ -35,6 +35,12 @@ Toggle_buttons record_buttons = Toggle_buttons(
   TOTAL_RECORD_BUTTONS, 0, false
 );
 
+#define TOTAL_MISC_FUNC_BUTTONS 4
+
+// Miscellaneous function buttons
+Toggle_buttons misc_func_buttons = Toggle_buttons(
+  TOTAL_MISC_FUNC_BUTTONS, 0x100, false 
+);
 
 #define TOTAL_TRACK_VOL_SLIDERS 8
 
@@ -94,6 +100,7 @@ void loop() {
 
   track_recarm_buttons.update(digital_in_values + 1);
   record_buttons.update(digital_in_values);
+  misc_func_buttons.update(digital_in_values + 8);
 
   track_vol_sliders.update(analog_in_values);
   // master_vol_sliders.update(analog_in_values);

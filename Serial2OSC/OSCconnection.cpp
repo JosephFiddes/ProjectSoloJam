@@ -1,5 +1,7 @@
 #include "OSCconnection.h"
 
+//#define DEBUG 
+
 // UDP stuff derived from 
 // https://www.geeksforgeeks.org/udp-server-client-implementation-c/
 // https://github.com/tahelka/UDP-ClientAndServer
@@ -101,8 +103,11 @@ size_t OSCConnection::send()
     // Prevent the program from sending a duplicate command.
     bReady_to_send = false;
 
-//  std::cout.write(buffer.data(), n);
-//  std::cout << "Message sent." << std::endl;
+    #ifdef DEBUG
+        std::cout.write(buffer.data(), n);
+        std::cout << "Message sent." << std::endl;
+    #endif
+
     return n; 
 }
 

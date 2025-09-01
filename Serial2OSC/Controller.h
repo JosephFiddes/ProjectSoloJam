@@ -23,11 +23,15 @@ private:
 	bool bRecording;
 	bool bTrack_armed;
 	uint32_t cur_armed_track;
+	bool bPlaying;
+	bool bMetronome;
 
 	inline void perform_button_action(uint32_t source);
 
 	inline void toggle_recording();
 	inline void set_record_arm(uint32_t track);
+	inline void toggle_play();
+	inline void toggle_metronome();
 
 	inline void perform_fader_action(uint32_t source, float value);
 
