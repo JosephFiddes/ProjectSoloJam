@@ -1,11 +1,20 @@
 # ProjectSoloJam (Work In Progress)
  Files and info for my solo jam project.
 
-![Controller Prototype.](./Controller/PrototypePhoto_2025-05-04.jpg)
+![Controller Prototype.](./Controller/PrototypePhoto_2025-09-01.jpg)
 
 Physical controller to send commands to REAPER, via Open Sound Control. The controller can toggle recording, change track volumes, and set record arming for tracks.
 
 A template REAPER project set up for the controller is found under SoloJamTemplate/SoloJamTemplate.rpp.
+
+## Assembly
+Solder the electronic components to the PCB. Note the Arduino UNO is connected via header pins.
+
+Place four of Corner Washer Thing 1 on the piece of wood, and then place the PCB on top, such that the washers are going through the PCB's four corner holes (note: the top-left corner hole is underneath the Arduino UNO - see the image above).
+
+Nail the PCB to the wood piece using nails with a 3mm diameter.
+
+(optional) Place Corner Washer Thing 2 on each of the nails.
 
 ## Setup
 ### Dependencies
@@ -56,17 +65,18 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
 | 1 uF Capacitors | 16 |
 | 100 Ohm Resistors | 16 |
 | 10K Ohm Resistors | 24 |
-| Breadboard, prototype board, cables <br> OR Solo Jam Controller PCB | |
+| 8-long row of Header Pins | 3 |
+| 6-long row of Header Pins | 1 |
+| Solo Jam Controller PCB | 1 |
+| Piece of wood big enough to nail the PCB to | 1 |
+| 3mm diameter nails | 4 |
 | **3D Printed Files:** |   |
-| Base Plate Part 1 | 1 |
-| Base Plate Part 2 | 1 |
+| Corner Washer Thing 1 | 4 |
+| Corner Washer Thing 2 | 4 |
 | SliderKnob | 8 |
 
 
 ## TODO
- - Figure out bug where random nonsense sometimes gets sent through COM port on start-up.
- - Find solution to overwriting part of track immediately overwriting the full thing.
+ - Figure out bug where random nonsense sometimes gets sent through COM port on start-up. (low priority - hasn't happened in a while, and not a massive concern anyway)
  - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits. (Note that the solution is to have it be the first thing in the class definition, but a better solution might be worthwhile since the current one doesn't feel super robust.)
- - Fix model for base by adding tolerance in gap and increasing width of side holes for cables.
  - Design and manufacture top-piece for controller for stability and isolation of electronics.
- - Make controller more robust - or formalise standard for communicating with Arduino.
