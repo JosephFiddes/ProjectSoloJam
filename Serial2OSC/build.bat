@@ -1,0 +1,1 @@
+g++ -o serial2osc.exe serial2osc.cpp OSCconnection.cpp SerialConnection.cpp Controller.cpp -lws2_32

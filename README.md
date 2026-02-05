@@ -30,9 +30,7 @@ The following dependencies are required:
 
 Prior to compilation, make sure that the port being used by the Arduino matches to port used by Serial2OSC. This can be done by opening serial2osc.cpp, finding the line `#define SERIAL_PORT "COM7"` and changing the `"COM7"` to whatever port the Arduino is using.
 
-This project makes use of the winsock2.h library. With MinGW it is compiled as follows:
-
-`g++ -o serial2osc.exe serial2osc.cpp OSCconnection.cpp SerialConnection.cpp Controller.cpp -lws2_32`
+This project makes use of the winsock2.h library, and is compiled with MinGW (`g++`). Run `build` to compile the program.
 
 #### Controller
 The code for the controller is run on an Arduino UNO, and can be compiled in the Arduino IDE. The electrical circuit diagram of the controller is shown below:
@@ -77,6 +75,12 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
 
 
 ## TODO
+ - Edit shape of slider (square normalised output?)
+ - Features to add to controller:
+   - move playhead to start
+   - Remove items from particular track
+   - Edit tempo?
+ - When recording starts while playback is off, playback turns on automatically - but the controller does not update bIsRecording. Also consider when playback turns off while recording, which leads to a wierd state.
  - Figure out bug where random nonsense sometimes gets sent through COM port on start-up. (low priority - hasn't happened in a while, and not a massive concern anyway)
  - In OSCconnection.h, find a way to force "buffer" to be aligned to 32 bits. (Note that the solution is to have it be the first thing in the class definition, but a better solution might be worthwhile since the current one doesn't feel super robust.)
  - Design and manufacture top-piece for controller for stability and isolation of electronics.

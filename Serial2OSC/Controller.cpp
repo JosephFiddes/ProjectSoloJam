@@ -63,13 +63,16 @@ inline void Controller::perform_button_action(uint32_t source) {
 		case 0x102:
 			toggle_metronome();
 			return;
+		case 0x103:
+			delete_all_music_items();
+			return;
 	}	
 }
 
 inline void Controller::toggle_recording() {
 	bRecording = !bRecording;
 
-	t->add_to_buffer("t/record", 1, 'i');
+	t->add_to_buffer("t/record");
 }
 
 inline void Controller::set_record_arm(uint32_t track) {
@@ -86,8 +89,8 @@ inline void Controller::set_record_arm(uint32_t track) {
 		return "b/track/" + std::to_string(track) + "/recarm";
 	};
 
-	t->add_to_buffer(message(prev_armed_track).c_str(), 0, 'i');
-	t->add_to_buffer(message(cur_armed_track).c_str(), 1, 'i');
+	t->add_to_buffer(message(prev_armed_track).c_str(), 0);
+	t->add_to_buffer(message(cur_armed_track).c_str(), 1);
 
 	// Turn off recording in order to finalise prev track record.
 	if (bRecording) toggle_recording();
@@ -96,13 +99,21 @@ inline void Controller::set_record_arm(uint32_t track) {
 inline void Controller::toggle_play() {
 	bPlaying = !bPlaying;
 
-	t->add_to_buffer("t/play", 1, 'i');
+	t->add_to_buffer("t/play");
 }
 
 inline void Controller::toggle_metronome() {
 	bMetronome = !bMetronome;
 
-	t->add_to_buffer("t/click", 1, 'i');
+	t->add_to_buffer("t/click");
+}
+
+inline void Controller::delete_all_music_items() {
+	// Only allow music items to be deleted when music is not playing.
+	if (!bPlaying) {
+		t->add_to_buffer("i/action", 40182); // Selects all items
+		t->add_to_buffer("i/action", 40697); // Deletes all selected
+	}
 }
 
 inline void Controller::perform_fader_action(uint32_t source, float value) {

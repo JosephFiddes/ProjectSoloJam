@@ -37,7 +37,7 @@ public:
 	// Initialises the send buffer
 	size_t init_buffer();
 	// Adds info to buffer
-	size_t add_to_buffer(const char*, int32_t, char);
+	size_t add_to_buffer(const char*, int32_t = 1, char = 'i');
 	// Finalises buffer for sending
 	size_t finalize_buffer();
 

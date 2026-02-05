@@ -32,6 +32,7 @@ private:
 	inline void set_record_arm(uint32_t track);
 	inline void toggle_play();
 	inline void toggle_metronome();
+	inline void delete_all_music_items();
 
 	inline void perform_fader_action(uint32_t source, float value);
 
