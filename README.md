@@ -75,7 +75,6 @@ With REAPER open, run serial2osc.exe. Pressing a button activates record arm for
 
 
 ## TODO
- - Edit shape of slider (square normalised output?)
  - Features to add to controller:
    - move playhead to start
    - Remove items from particular track

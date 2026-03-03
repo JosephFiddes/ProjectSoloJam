@@ -1,5 +1,7 @@
 #include "Controller.h"
 
+#include <cmath>
+
 //#define DEBUG 
 
 Controller::Controller() {
@@ -129,6 +131,9 @@ inline void Controller::set_track_volume(uint32_t track, float volume) {
 	auto message = [](uint32_t track) {
 		return "n/track/" + std::to_string(track) + "/volume";
 	};
+
+	// Shape the curve such that it's more sensitive in lower settings, and less sensitive in higher settings.
+	volume = pow(volume, 0.8);
 
 	// add_to_buffer takes a uint32_t for its second argument.
 	// This will be converted back to a float inside the function.
