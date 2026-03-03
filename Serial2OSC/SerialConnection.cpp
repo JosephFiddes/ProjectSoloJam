@@ -46,8 +46,8 @@ SerialConnection::SerialConnection(const char* port)
 	// Timeouts
 	COMMTIMEOUTS timeouts={0};
 	timeouts.ReadIntervalTimeout=50;
-	timeouts.ReadTotalTimeoutConstant=50;
-	timeouts.ReadTotalTimeoutMultiplier=10;
+	timeouts.ReadTotalTimeoutConstant=0;
+	timeouts.ReadTotalTimeoutMultiplier=0;
 	
 	timeouts.WriteTotalTimeoutConstant=50;
 	timeouts.WriteTotalTimeoutMultiplier=10;

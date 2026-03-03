@@ -104,6 +104,9 @@ void loop() {
 
   track_vol_sliders.update(analog_in_values);
   // master_vol_sliders.update(analog_in_values);
+
+  // Add a delay between loops so the reader doesn't get filled up with too many similar commands during a fade.
+  delay(55);
 }
 
 inline void update_values(bool digital_in[], const uint8_t total_digital_in,
